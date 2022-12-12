@@ -7,6 +7,8 @@ import java.net.URLConnection;
 
 public class Connection {
 
+    String sandokan = "0";
+
     void connect() throws IOException {
         URLConnection request = null;
         try {
@@ -24,6 +26,7 @@ public class Connection {
         JsonObject obj = gson.fromJson(root, JsonObject.class);
 
         System.out.println(obj.get("id").toString());
+        sandokan = obj.get("id").toString();
 
 
 

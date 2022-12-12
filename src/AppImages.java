@@ -4,55 +4,79 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+// TODO Graphic
 public class AppImages {
 
     public AppImages() {
     }
 
+    // Image
     private BufferedImage backgroundDay() throws IOException {
         return ImageIO.read(new File("Day.png"));
     }
 
+    // Image
     private BufferedImage backgroundNight() throws IOException {
         return ImageIO.read(new File("Night.png"));
     }
 
+    // Image
     private BufferedImage hum() throws IOException {
         return ImageIO.read(new File("hum.png"));
     }
 
+    // Image
     private BufferedImage sun() throws IOException {
         return ImageIO.read(new File("sun.png"));
     }
 
+    // Image Weather icon
     private BufferedImage snowW() throws IOException {
         return ImageIO.read(new File("snow.png"));
     }
 
+    // Image Weather icon
     private BufferedImage sunW() throws IOException {
         return ImageIO.read(new File("sunB.png"));
     }
 
+    // Image Weather icon
     private BufferedImage stormW() throws IOException {
         return ImageIO.read(new File("storm.png"));
     }
 
+    // Image Weather icon
     private BufferedImage fogW() throws IOException {
         return ImageIO.read(new File("fog.png"));
     }
 
+    // Image Weather icon
     private BufferedImage cloudW() throws IOException {
         return ImageIO.read(new File("cloud.png"));
     }
 
+    // Image Weather icon
     private BufferedImage rainW() throws IOException {
         return ImageIO.read(new File("rain.png"));
     }
 
+    // Image Weather icon
     private BufferedImage moonW() throws IOException {
         return ImageIO.read(new File("moon.png"));
     }
 
+    // Image Search icon
+    BufferedImage searchB() throws IOException {
+        return ImageIO.read(new File("search.png"));
+    }
+
+    // Graphics rectangle
+    public void drawLine(Graphics g){
+        g.setColor(Color.WHITE);
+        g.fillRect(30,365,340,2);
+    }
+
+    // TODO Swap background function
     public void drawBackground(Graphics g, Boolean dayOff){
         if (dayOff){
             try {
@@ -69,6 +93,7 @@ public class AppImages {
         }
     }
 
+    // TODO Draw Hum icon
     public void drawHum(Graphics g) {
         try{
             g.drawImage(hum(), 220, 647, null);
@@ -77,6 +102,7 @@ public class AppImages {
         }
     }
 
+    // TODO Draw Sun icon
     public void drawSun(Graphics g){
         try{
             g.drawImage(sun(), 310, 647, null);
@@ -85,6 +111,7 @@ public class AppImages {
         }
     }
 
+    // TODO Swap weather icon
     public void drawIcon(Graphics g, int num){
         switch (num){
             case 1:
@@ -137,5 +164,10 @@ public class AppImages {
                 }
                 break;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AppImages{}";
     }
 }

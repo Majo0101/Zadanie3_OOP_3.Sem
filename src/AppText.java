@@ -2,11 +2,13 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// TODO 2D Text for App
 public class AppText {
 
     public AppText() {
     }
 
+    // TODO Draw name of Town
     public void drawTitle(Graphics g, String text){
         g.setColor(Color.white);
         g.setFont(new Font("DejaVu Sans", Font.BOLD, 36));
@@ -14,6 +16,7 @@ public class AppText {
         g.drawString(text, 200 - textWidth/2, 100);
     }
 
+    // TODO Draw Local Date ... can be modified in future from API
     public void drawTime(Graphics g){
         Date date = new Date();
         SimpleDateFormat dayText = new SimpleDateFormat("EEEE, ");
@@ -32,6 +35,7 @@ public class AppText {
         g.drawString(str, 200 - textWidth/2, 130);
     }
 
+    // TODO Draw Temp
     public void drawTemp(Graphics g, String temp){
         g.setColor(Color.white);
 
@@ -43,24 +47,28 @@ public class AppText {
         g.drawString("°C", 50 + textWidth,600);
     }
 
+    // TODO Draw minus IF temperature < 0
     public void drawTempMinus(Graphics g){
         g.setColor(Color.white);
         g.setFont(new Font("DejaVu Sans Light", Font.PLAIN, 90));
         g.drawString("-", 25,650);
     }
 
+    // TODO Draw Humidity
     public void drawHum(Graphics g, String hum){
         g.setColor(Color.white);
         g.setFont(new Font("DejaVu Sans Light", Font.PLAIN, 16));
         g.drawString(hum, 240,660);
     }
 
+    // TODO Draw sun intensity
     public void drawSun(Graphics g, String text){
         g.setColor(Color.white);
         g.setFont(new Font("DejaVu Sans Light", Font.PLAIN, 16));
         g.drawString(text, 330,660);
     }
 
+    // TODO Draw weather as a text
     public void drawStatus(Graphics g, String text){
         g.setColor(Color.white);
         g.setFont(new Font("DejaVu Sans", Font.BOLD, 20));
@@ -68,4 +76,8 @@ public class AppText {
         g.drawString(text, 290 - textWidth/2,630);
     }
 
+    @Override
+    public String toString() {
+        return "AppText{}";
+    }
 }
