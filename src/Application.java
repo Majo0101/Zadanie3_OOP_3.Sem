@@ -3,14 +3,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
+// TODO JPanel
 public class Application extends JPanel{
-    static final int SCREEN_WIDTH = 400;
-    static final int SCREEN_HEIGHT = 700;
-    AppText text;
-    AppImages img;
-    Connection connect;
-    JButton submit;
-    JTextField search;
+    static final int SCREEN_WIDTH = 400;    // App width
+    static final int SCREEN_HEIGHT = 700;   // App height
+    AppText text;       // Texts
+    AppImages img;      // Graphic
+    Connection connect;     // API call
+    JButton submit;     // Button
+    JTextField search;      // TextField
 
     Application(){
         text = new AppText();
@@ -19,13 +20,15 @@ public class Application extends JPanel{
         search = new JTextField(10);
         connect = new Connection();
 
-        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.black);
+        // TODO JPanel settings
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));  // Set Height and Width
+        this.setBackground(Color.black);    // Set Background
         this.setFocusable(true);
-        this.setLayout(null);
-        this.add(submit);
-        this.add(search);
+        this.setLayout(null);   // Remove Layout
+        this.add(submit);   // Add button to JPanel
+        this.add(search);   // Add TextField to JPanel
 
+        // TODO Button settings
         submit.setBounds(310, 320, 40, 40);
         submit.setCursor(new Cursor(Cursor.HAND_CURSOR));
         submit.setOpaque(false);
@@ -37,6 +40,7 @@ public class Application extends JPanel{
             e.printStackTrace();
         }
 
+        // TODO TextField settings
         search.setBounds(50, 320, 260, 40);
         search.setOpaque(false);
         search.setBorder(null);
@@ -45,43 +49,43 @@ public class Application extends JPanel{
         search.setCaretColor(Color.WHITE);
         search.putClientProperty("caretWidth", 3);
 
+        // TODO Submit button action listener
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("mnaaau");
-                try {
-                    connect.connect();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                System.out.println(search.getText());
-                search.setText("");
-                repaint();
+                connect.connect(search.getText());      // Send Location to api
+                search.setText("");     // Reset TextField
+                repaint();      // Repaint
             }
-        } );
+        });
     }
 
+    // TODO Paint Graphics
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        // TODO AntiAliasing ON
         Graphics2D g2 = (Graphics2D)g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHints(rh);
 
-        img.drawBackground(g, true);
+        // TODO Paint
+        img.drawBackground(g, connect.getNight());  // Background
 
-        text.drawTitle(g, "Bratislava");
-        text.drawTime(g);
-        text.drawTemp(g, "25");
-        text.drawTempMinus(g);
-        text.drawHum(g, "65%");
-        text.drawSun(g, "Low");
-        text.drawStatus(g, "SNOW");
+        text.drawTitle(g, connect.getLocation());   // Location
+        text.drawTime(g);   // Local date
+        text.drawTemp(g, connect.getTemperature());     // Temperature
+        if (connect.getLowTemp()){      // Show Minus if temperature < 0
+            text.drawTempMinus(g);
+        }
+        text.drawHum(g, connect.getHumidity() + "%");   // Humidity
+        text.drawSun(g, connect.getSunIntensity());     // Sun intensity
+        text.drawStatus(g, connect.getWeatherText());   // Weather text
 
-        img.drawHum(g);
-        img.drawSun(g);
-        img.drawIcon(g, 2);
-        img.drawLine(g);
+        img.drawHum(g);     // Humidity icon
+        img.drawSun(g);     // Sun icon
+        img.drawIcon(g, connect.getWeatherNum());   // Weather icon
+        img.drawLine(g);    // Draw line
     }
 
     @Override
