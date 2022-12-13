@@ -44,7 +44,7 @@ public class Application extends JPanel{
         search.setBounds(50, 320, 260, 40);
         search.setOpaque(false);
         search.setBorder(null);
-        search.setFont(new Font("DejaVu Sans Light", Font.PLAIN, 26));
+        search.setFont(new Font("DejaVu Sans", Font.BOLD, 26));
         search.setForeground(Color.WHITE);
         search.setCaretColor(Color.WHITE);
         search.putClientProperty("caretWidth", 3);

@@ -29,6 +29,7 @@ public class Connection {
         }
     }
 
+    private final static String API_KEY = ;
     private Boolean Night;
     private String location;
     private String temperature;
@@ -39,7 +40,7 @@ public class Connection {
     private int weatherNum;
 
     public Connection() {
-        Night = false;
+        this.Night = false;
         this.location = "Enter location";
         this.temperature = "00";
         this.lowTemp = false;
@@ -50,30 +51,130 @@ public class Connection {
     }
 
     // TODO Parse JSON API
-    void connect(String Location){
+    void connect(String location){
+
         URLConnection request = null;
+        Gson gson;
+        JsonParser jsonParser;
+
+        // TODO Try download JSON via REST API
         try {
-            URL url = new URL("https://jsonplaceholder.typicode.com/todos/1");
+            URL url = new URL("http://api.weatherapi.com/v1/current.json?key=" + API_KEY + "&q=" + location + "&aqi=no");
             request = url.openConnection();
             request.connect();
         } catch (Exception e) {
-            System.out.println("Chyba");
+            this.Night = false;
+            this.location = "Fog in the data";
+            this.temperature = "00";
+            this.lowTemp = false;
+            this.humidity = "00";
+            this.sunIntensity = "Low";
+            this.weatherText = "FOG";
+            this.weatherNum = Weather.FOG.getResponse();
         }
 
+        // TODO Try parse JSON not for daily or commercial use
         try{
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonParser jp = new JsonParser();
+            gson = new GsonBuilder().setPrettyPrinting().create();
+            jsonParser = new JsonParser();
             assert request != null;
-            JsonElement root =jp.parse(new InputStreamReader((InputStream) request.getContent()));
-            JsonObject obj = gson.fromJson(root, JsonObject.class);
 
-            System.out.println(obj.get("id").toString());
-            location = obj.get("id").toString();
+            JsonElement data =jsonParser.parse(new InputStreamReader((InputStream) request.getContent()));
+            JsonObject obj = gson.fromJson(data, JsonObject.class);
+
+            JsonObject locationJson = gson.fromJson(obj.get("location"), JsonObject.class);
+            JsonObject currentJson = gson.fromJson(obj.get("current"), JsonObject.class);
+            JsonObject conditionJson = gson.fromJson(currentJson.get("condition"), JsonObject.class);
+
+//            this.Night = currentJson.get("is_day").getAsInt() == 0;
+            this.location = locationJson.get("name").getAsString();
+            int temp = currentJson.get("temp_c").getAsInt();
+
+            if (temp < 0){
+                this.lowTemp = true;
+                String tmp = Integer.toString(temp);
+                this.temperature = tmp.substring(1);
+            }else{
+                this.lowTemp = false;
+                this.temperature = Integer.toString(temp);
+            }
+
+            this.humidity = currentJson.get("humidity").getAsString();
+            this.sunIntensity = "Low";
+            this.weatherText = conditionJson.get("text").getAsString();
+
+            this.weatherNum = Weather.FOG.getResponse();
+
+            // TODO Worst part of code
+            switch (conditionJson.get("code").getAsInt()){
+                case 1000:
+                case 1003:
+//                    if (currentJson.get("is_day").getAsInt() == 0){
+//                        this.weatherNum = Weather.MOON.getResponse();
+//                    }else{
+//                        this.weatherNum = Weather.SUN.getResponse();
+//                    }
+                    break;
+                case 1063:
+                case 1276:
+                case 1273:
+                case 1246:
+                case 1243:
+                case 1240:
+                case 1201:
+                case 1195:
+                case 1192:
+                case 1198:
+                case 1189:
+                case 1286:
+                case 1283:
+                case 1280:
+                case 1171:
+                case 1168:
+                    this.weatherNum = Weather.RAIN.getResponse();
+                    break;
+                case 1237:
+                case 1279:
+                case 1264:
+                case 1261:
+                case 1258:
+                case 1255:
+                case 1252:
+                case 1249:
+                case 1225:
+                case 1222:
+                case 1219:
+                case 1216:
+                case 1210:
+                case 1213:
+                case 1114:
+                case 1066:
+                    this.weatherNum = Weather.SNOW.getResponse();
+                    break;
+                case 1135:
+                case 1147:
+                    this.weatherNum = Weather.FOG.getResponse();
+                    break;
+                case 1087:
+                    this.weatherNum = Weather.STORM.getResponse();
+                    break;
+                default:
+                    this.weatherNum = Weather.CLOUD.getResponse();
+                    break;
+            }
+
+            System.out.println(gson.toJson(obj));
         }catch (IOException e){
-            e.printStackTrace();
+            this.Night = false;
+            this.location = "Fog in the data";
+            this.temperature = "00";
+            this.lowTemp = false;
+            this.humidity = "00";
+            this.sunIntensity = "Low";
+            this.weatherText = "FOG";
+            this.weatherNum = Weather.FOG.getResponse();
         }
     }
-
 
     // TODO Getters and Setters
     public Boolean getNight() {
